@@ -1,12 +1,15 @@
-package pwr.awt.demo;
+package pwr.awt.demo.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig {
+@EnableWebMvc
+public class WebConfiguration implements WebMvcConfigurer {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -15,12 +18,12 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000"
-                                ,"https://libraryw08.herokuapp.com/")
+                                ,"https://libraryw08.herokuapp.com")
                         .allowedMethods("GET","POST", "PUT", "DELETE")
                         .maxAge(3600);
                 registry.addMapping("/hello")
                         .allowedOrigins("http://localhost:3000"
-                                ,"https://libraryw08.herokuapp.com/")
+                                ,"https://libraryw08.herokuapp.com")
                         .allowedMethods("GET","POST", "PUT", "DELETE")
                         .maxAge(3600);
                 registry.addMapping("/hello/*")
@@ -29,5 +32,11 @@ public class CorsConfig {
                         .maxAge(3600);
             }
         };
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
