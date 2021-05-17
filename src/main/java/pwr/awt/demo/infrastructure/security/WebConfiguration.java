@@ -19,15 +19,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000"
                                 ,"https://libraryw08.herokuapp.com")
-                        .allowedMethods("GET","POST", "PUT", "DELETE")
-                        .maxAge(3600);
-                registry.addMapping("/hello")
-                        .allowedOrigins("http://localhost:3000"
-                                ,"https://libraryw08.herokuapp.com")
-                        .allowedMethods("GET","POST", "PUT", "DELETE")
-                        .maxAge(3600);
-                registry.addMapping("/hello/*")
-                        .allowedOrigins("*")
+                        .allowedHeaders("*")
                         .allowedMethods("GET","POST", "PUT", "DELETE")
                         .maxAge(3600);
             }

@@ -18,7 +18,7 @@ public interface UserService {
         }
 
     }
-    interface  Query {
+    interface Query {
         interface Login extends Query{
             String getEmail();
             String getPassword();

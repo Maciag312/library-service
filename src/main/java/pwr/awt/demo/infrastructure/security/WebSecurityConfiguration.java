@@ -13,10 +13,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pwr.awt.demo.infrastructure.security.jwt.JwtTokenFilterConfigurer;
 import pwr.awt.demo.infrastructure.security.jwt.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -45,15 +49,28 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/configuration/security").permitAll()
                 .antMatchers("/api/user/signin").permitAll()
                 .antMatchers("/api/user/signup").permitAll()
+                .antMatchers("/api/books/**").permitAll()
+                .antMatchers("/api/books").permitAll()
                 .antMatchers("/h2-console").permitAll()
                 .antMatchers("/swagger-ui/index.html").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                // Disallow everything else..
                 .anyRequest().authenticated();
 
-        // Apply JWT
+        http.cors().configurationSource(corsConfigurationSource());
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     private RequestMatcher checkPort(final int port) {

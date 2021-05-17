@@ -13,6 +13,7 @@ import pwr.awt.demo.domain.user.UserService;
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Api( tags = "User")
+@CrossOrigin("http://loclahost:3000")
 public class UserController {
 
     private final UserService userService;
